@@ -1,0 +1,40 @@
+//
+//  main.swift
+//  set
+//
+//  Created by dm16 on 10/07/2019.
+//  Copyright © 2019 digital media. All rights reserved.
+//
+
+import Foundation
+
+// <집합 연산>
+let englishClassStudents: Set<String> = ["john", "chulsoo", "yagom"]
+let koreanClassStudnets: Set<String> = ["jenny", "yagom", "chulsoo"]
+
+// - 교집합
+let intersectSet: Set<String> = englishClassStudents.intersection(koreanClassStudnets)
+
+// - 배타적 논리합 (여집합의 합)
+let symmetricDiffSet: Set<String> = englishClassStudents.symmetricDifference(koreanClassStudnets)
+
+// - 합집합
+let unionSet: Set<String> = englishClassStudents.union(koreanClassStudnets)
+
+// - 차집합
+let subtractSet: Set<String> = englishClassStudents.subtracting(koreanClassStudnets)
+
+print(unionSet.sorted())
+
+
+
+// <포함관계 연산>
+
+let 새: Set<String> = ["비둘기", "닭", "기러기"]
+let 포유류: Set<String> = ["사자", "호랑이", "곰"]
+let 동물: Set<String> = 새.union(포유류)
+
+print(새.isDisjoint(with: 포유류))
+print(새.isSubset(of: 동물))
+print(동물.isSuperset(of: 포유류))
+print(동물.isSuperset(of: 새))

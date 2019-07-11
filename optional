@@ -1,0 +1,25 @@
+//
+//  main.swift
+//  optional
+//
+//  Created by dm16 on 10/07/2019.
+//  Copyright © 2019 digital media. All rights reserved.
+//
+
+import Foundation
+
+var names: [String] = ["Mickey", "Donald", "Pororo", "yagom", "lucky"]
+
+print("찾는 사람의 이름을 입력하세요")
+var inputName: String? = readLine()
+
+if let toFindName = inputName
+{
+    for item in names
+    {
+        if item == toFindName
+        {
+            print(names.firstIndex(of: toFindName))
+        }
+    }
+}

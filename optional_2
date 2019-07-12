@@ -1,0 +1,31 @@
+//
+//  main.swift
+//  optional_2
+//
+//  Created by dm16 on 10/07/2019.
+//  Copyright © 2019 digital media. All rights reserved.
+//
+
+import Foundation
+
+func timesTable(x: Int)
+{
+    for i in 1...9
+    {
+        print("\(x)*\(i)=\(x*i)")
+    }
+}
+
+print("단 입력")
+
+if let number:String = readLine()
+{
+    if let realNum: Int = Int(number)
+    {
+        timesTable(x: realNum)
+    }
+    
+}
+else{
+    print("입력오류")
+}

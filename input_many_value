@@ -1,0 +1,17 @@
+//
+//  main.swift
+//  input
+//
+//  Created by dm16 on 10/07/2019.
+//  Copyright © 2019 digital media. All rights reserved.
+//
+
+import Foundation
+
+print("좋아하는 동물을 입력 구분은 ,로")
+if let inputString: String = readLine()
+{
+    print(inputString)
+    var animals: [String] = inputString.components(separatedBy: ",")
+    print(animals)
+}

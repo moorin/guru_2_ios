@@ -1,0 +1,43 @@
+import Cocoa
+
+var str = "Hello, playground"
+print(str)
+print("Hello world", "test", "hi")
+var test = 132432
+print("\(test)")
+
+var 이름 = "test"
+var al:String
+
+var a1:String
+var a3 = true
+type(of: a3)
+
+var names:Array<String> = ["a", "b", "c"]
+var names3:Array<Array<String>> = [["a", "b", "c"],["a", "b", "c"]]
+var names2:[String] = ["a", "b", "c"]
+var names4:[[String]] = [["a", "b", "c"],["a", "b", "c"]]
+
+print(names[0])
+names[0] = "e"
+print(names)
+names.append("ㅎ")
+names.append(contentsOf: ["k","o"])
+names.insert("q", at: 2)
+names.count
+names.isEmpty
+names.remove(at: 1)
+names.index(of: "k")
+if (names.firstIndex(of: "v") != nil)
+{
+    names.remove(at: names.firstIndex(of: "v")!)
+}
+
+var ak:Int? = 13
+var aq:Int!
+aq = 99
+print(ak!)
+
+var a = 13
+var b = 19
+var c = a + b

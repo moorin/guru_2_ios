@@ -5,6 +5,7 @@
 //  Created by swuad_05 on 26/12/2019.
 //  Copyright © 2019 swuad_05. All rights reserved.
 //
+// added pod 'SwiftyGif'
 
 import UIKit
 import SwiftyGif

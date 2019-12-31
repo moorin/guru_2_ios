@@ -1,0 +1,42 @@
+//
+//  ViewController.swift
+//  Giftest
+//
+//  Created by swuad_05 on 26/12/2019.
+//  Copyright © 2019 swuad_05. All rights reserved.
+//
+
+import UIKit
+import SwiftyGif
+
+class ViewController: UIViewController, SwiftyGifDelegate {
+
+    @IBOutlet weak var image_view: UIImageView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        
+        do {
+            let gif = try UIImage(gifName: "9iugoWM.gif")
+            self.image_view.setGifImage(gif)
+            self.image_view.loopCount = 1
+            self.image_view.startAnimating()
+            self.image_view.delegate = self // 변호사 선임
+        } catch {
+            print("gif없음")
+        }
+        
+    }
+
+    func gifDidStop(sender: UIImageView)
+    {
+        NSLog("Gif stop will move to cecond view")
+        let secondVC = self.storyboard!.instantiateViewController(withIdentifier: "secondView")
+        secondVC.modalPresentationStyle = .fullScreen
+        present(secondVC, animated: true, completion: nil)
+    }
+    
+    
+}
+

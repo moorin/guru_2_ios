@@ -1,0 +1,182 @@
+//
+//  ViewController.swift
+//  SimpleMemo
+//
+//  Created by swuad_05 on 30/12/2019.
+//  Copyright © 2019 swuad_05. All rights reserved.
+//  added pod 'FMDB'
+
+import UIKit
+import FMDB
+
+class ViewController: UIViewController, UITextFieldDelegate
+{
+    var databasePath = String()
+    var data = String()
+    
+    
+    @IBOutlet weak var memoText: UITextField!
+    @IBOutlet weak var btnSave: UIButton!
+    @IBOutlet weak var btnLoad: UIButton!
+    
+    @IBAction func doSave(_ sender: UIButton)
+    {
+        NSLog(self.memoText.text!)
+        if self.memoText.text?.count == 0
+        {
+            NSLog("쿼리 없음")
+            return
+        }
+    
+        let db = FMDatabase(path: self.databasePath)
+        
+        if db.open()
+        {
+            let delete_query = "delete from memo"
+            db.executeStatements(delete_query)
+            
+            let insert_query = "insert into memo (memo) values ('\(self.memoText.text!)')"
+            db.executeStatements(insert_query)
+            
+            if db.hadError()
+            {
+                NSLog("쿼리 오류")
+            }
+                db.close()
+        }
+        else
+        {
+            NSLog("DB 연결 오류")
+        }
+    }
+    
+    @IBAction func doLoad(_ sender: UIButton)
+    {
+        self.memoText.text = "Hello"
+        let db = FMDatabase(path: self.databasePath)
+        if db.open()
+        {
+            let select_query = "select * from memo"
+            let result:FMResultSet? = db.executeQuery(select_query, withArgumentsIn:[])
+            if result != nil
+            {
+                if result!.next()
+                {
+                    self.memoText.text = result!.string(forColumn: "memo")
+                    NSLog("데이터 불러오기 성공")
+                }
+            } else {
+                NSLog("데이터 불러오기 실패")
+            }
+            db.close()
+        }
+        else
+        {
+            NSLog("DB 연결 오류")
+        }
+    }
+    
+    
+    // 키보드가 올라가거나 내려갈 때 실행할 함수
+    @objc private func keyboardWillShow(_ notification:Notification)
+    {
+        NSLog("show")
+        if let keyboardFrame:NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+        {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            self.view.frame.origin.y -= keyboardHeight
+        }
+    }
+    
+    @objc private func keyboardWillHide(_ notification:Notification)
+    {
+        NSLog("hide")
+        if let keyboardFrame:NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+        {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            self.view.frame.origin.y += keyboardHeight
+        }
+    }
+    
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        
+        // 키보드가 올
+        /*
+        NotificationCenter.default.addObserver(
+            self,
+            selector:#selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object:nil
+            )
+        
+        // 키보드가
+        NotificationCenter.default.addObserver(
+            self,
+            selector:#selector(keyboardWillHide),
+            name: UIResponder.keyboardDidHideNotification,
+            object:nil
+        )
+         */
+        
+        //데이터베이스 초기화 작업
+        //1. DB 파일의 경로 만들기
+        let fileManager = FileManager.default
+        let appDirs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        self.databasePath = appDirs[0]+"/member.db" //데이터베이스를 저장할 경로를 정한것
+        //2. 만약 해당 파일이 없다면 새로 만들기 - DB초기화(viewDidLoad에서 하기 때문에 분기하지 않으면 계속 실행되면서 초기화됨)
+        if !fileManager.fileExists(atPath: self.databasePath)
+        {
+            let db = FMDatabase(path: self.databasePath) //데이터베이스를 만드는 과정이기도 하고 여는 과정이기도 함
+            //3. DB파일을 열어서 작업을 한다.
+            if db.open()
+            {
+                //DBMS - DB라고 하는 것은 이거
+                //1)데이터 베이스 -  어떤 앱이냐?를 결정(데이터베이스시스템은 한개인데 앱마다 데이터 베이스를 가지고 그걸 결정)
+                //2) 테이블 - 어떤 종류의 데이터인지 결정(회원정보면 회원정보 테이블별도, 상품정보면 상품정보테이블 별도로)
+                //3) Row(Record) - 한 줄의 데이터
+                //4) Column - 각 칸의 데이터
+        
+                let sql_query = "create table if not exists memo (id integer primary key autoincrement, memo text)"
+                //오타가 있으면 테이블이 안만들어지지만 DB는 생성되서 다시 실행하면 DB파일이 있다고 뜸(다시 앱 삭제하고 실행해야함)
+                if db.executeStatements(sql_query)
+                {
+                    NSLog("쿼리 성공")
+                }
+                else
+                {
+                    NSLog("쿼리 실패")
+                }
+                //4. 작업이 끝나면 DB파일을 닫는다.
+                db.close()
+            }
+            else
+            {
+                NSLog("DB 연결 실패")
+            }
+        }
+        else
+        {
+            NSLog("기존 DB있음")
+        }
+
+        
+    }
+
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+        self.view.endEditing(true)
+    }
+
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        self.view.endEditing(true)
+        return true
+    }
+
+}
